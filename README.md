@@ -1,1 +1,0 @@
-# diploma-it-monitoring-system
