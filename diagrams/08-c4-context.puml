@@ -1,0 +1,25 @@
+@startuml
+!include <C4/C4_Context>
+skinparam defaultFontName "DejaVu Sans"
+skinparam dpi 120
+LAYOUT_TOP_DOWN()
+title C4, 1-деңгей: жүйенің контексі
+
+Person(eng, "Техникалық қолдау инженері", "Ескертулерді өңдейді, қашықтан команда жібереді")
+Person(adm, "Жүйе әкімшісі", "Шекті мәндерді, пайдаланушыларды, агенттерді баптайды")
+Person(mgr, "IT-бөлім басшысы", "Есептерді және аудит журналын қарайды")
+
+System(itmon, "ITMon", "Компьютерлерді орталықтандырылған мониторингтеу, диагностикалау және қашықтан әкімшілендіру жүйесі")
+
+System_Ext(pcs, "Ұйымның компьютерлері", "Windows 10/11, Ubuntu; әрқайсысында ITMon агенті")
+System_Ext(mail, "Пошта сервері (SMTP)", "Ескерту хабарламаларын жеткізеді")
+System_Ext(tg, "Telegram Bot API", "Шұғыл ескертулер (жоспарланған)")
+
+Rel(eng, itmon, "Құрылғылар күйін көреді, команда жібереді", "HTTPS")
+Rel(adm, itmon, "Баптайды", "HTTPS")
+Rel(mgr, itmon, "Есеп алады", "HTTPS")
+Rel(pcs, itmon, "Метрикалар, команда нәтижелері", "HTTPS, JSON")
+Rel(itmon, pcs, "Командалар (агент сұрағанда, pull)")
+Rel(itmon, mail, "Ескерту хаттары", "SMTP")
+Rel(itmon, tg, "Шұғыл ескертулер", "HTTPS")
+@enduml

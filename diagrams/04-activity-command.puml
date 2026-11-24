@@ -1,0 +1,54 @@
+@startuml
+!include _style.iuml
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ActivityBorderColor #333333
+skinparam SwimlaneTitleFontStyle bold
+title Activity 2: Қашықтан команданы орындау (TTL және қайталау)
+
+|Техникалық қолдау инженері|
+start
+:Құрылғыны таңдау;
+:Командаға батырманы басу\n(мысалы, disk_usage);
+|Сервер (ITMon)|
+if (Команда ақ тізімде және\nрөлге рұқсат бар ма?) then (жоқ)
+  :400 / 403 қайтару;
+  |Техникалық қолдау инженері|
+  :Қате хабарламасын көру;
+  stop
+else (иә)
+endif
+|Сервер (ITMon)|
+:Кезекке қою: pending,\nexpires_at = now + TTL;
+:Аудит журналына жазу;
+while (Команда pending күйінде ме?) is (иә)
+  if (TTL өтті ме?) then (иә)
+    :Күйі "expired";
+    |Техникалық қолдау инженері|
+    :"Агент офлайн, TTL өтті"\nдегенді көру;
+    stop
+  else (жоқ)
+  endif
+  |Мониторинг агенті|
+  if (Агент онлайн, 2 с сайын сұрайды) then (иә)
+    |Сервер (ITMon)|
+    :Командаларды беру, күйі "running",\nattempts = attempts + 1;
+    |Мониторинг агенті|
+    :Команданы орындау;
+    if (Нәтиже timeout ішінде жіберілді ме?) then (иә)
+      |Сервер (ITMon)|
+      :Күйі "done", нәтижені сақтау;
+    else (жоқ, агент үзілді)
+      |Сервер (ITMon)|
+      if (attempts < max_attempts?) then (иә)
+        :Қайтадан "pending";
+      else (жоқ)
+        :Күйі "failed";
+      endif
+    endif
+  else (жоқ)
+  endif
+endwhile (жоқ)
+|Техникалық қолдау инженері|
+:Нәтижені панельде көру;
+stop
+@enduml

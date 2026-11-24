@@ -1,0 +1,49 @@
+@startuml
+!include _style.iuml
+skinparam sequenceParticipantBackgroundColor #DAE8FC
+skinparam sequenceParticipantBorderColor #1F3864
+autonumber
+title Sequence 2 («қиын жер»): офлайн агентке команда, TTL және қайталау
+
+actor "Инженер" as E
+participant ":WebPanel" as P
+participant ":CommandAPI" as API
+participant ":CommandQueue" as Q
+database ":commands" as DB
+participant ":Agent" as A
+
+E -> P : "Дискілер" батырмасы
+P -> API : POST /api/agents/{id}/commands/disk_usage
+API -> API : JWT, run_diagnostics құқығы,\nақ тізімді тексеру
+API -> Q : enqueue(device, disk_usage, user)
+Q -> DB : INSERT status=pending,\nexpires_at = now + TTL(300 с)
+API --> P : 200 {id, status: pending}
+P --> E : "кезекте"
+
+note over A : агент офлайн\n(ПК ұйқы режимінде)
+
+alt агент TTL ішінде қосылды
+  A -> API : GET /api/agent/pending (X-Agent-Token)
+  API -> Q : pollFor(device)
+  Q -> DB : expired/hung командаларды өңдеу (tick)
+  Q -> DB : UPDATE status=running,\nattempts+1, started_at=now
+  API --> A : [{id, disk_usage}]
+  A -> A : cmd_disk_usage()
+  alt нәтиже timeout(60 с) ішінде
+    A -> API : POST /api/agent/commands/{id}/result
+    API -> DB : UPDATE status=done WHERE status=running
+    API --> A : 200
+  else агент орындау кезінде үзілді
+    Q -> DB : tick: attempts < max ? pending : failed
+    A -> API : POST /result (кешіккен нәтиже)
+    API --> A : 409 Conflict
+  end
+else TTL өтті, агент әлі офлайн
+  Q -> DB : tick: UPDATE status=expired
+  A -> API : GET /pending (кейін қосылды)
+  API --> A : [] (ескі команда орындалмайды)
+end
+P -> API : GET /api/agents/{id}/commands (4 с сайын)
+API --> P : status (done / expired / failed)
+P --> E : нәтиже немесе себебі
+@enduml

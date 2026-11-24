@@ -1,0 +1,6 @@
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 13
+skinparam dpi 120
+skinparam shadowing false
+skinparam ArrowColor #333333
+skinparam BackgroundColor white

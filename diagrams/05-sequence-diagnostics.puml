@@ -1,0 +1,42 @@
+@startuml
+!include _style.iuml
+skinparam sequenceParticipantBackgroundColor #DAE8FC
+skinparam sequenceParticipantBorderColor #1F3864
+autonumber
+title Sequence 1: Метрика қабылдау және N рет қатарынан диагностика
+
+participant ":Agent" as A
+participant ":MetricsAPI" as API
+database ":MetricRepository" as R
+participant ":DiagnosticService" as D
+participant ":ConsecutiveStrategy" as S
+participant ":AlertService" as AS
+actor "Инженер" as E
+
+A -> API : POST /api/agent/metrics (X-Agent-Token, cpu, ram, disk)
+activate API
+API -> API : current_agent(token):\nSHA-256 хэші бойынша іздеу,\nrevoked тексеру
+alt токен қате
+  API --> A : 401 Unauthorized
+else токен дұрыс
+  API -> R : save(device, metrics)
+  API -> D : check(device)
+  activate D
+  loop әр метрика түрі үшін (cpu, ram, disk, temp)
+    D -> R : latest(device, type, n = consecutive_count)
+    R --> D : samples[n]
+    D -> S : evaluate(samples, threshold)
+    activate S
+    S --> D : level = min(level(v) for v in samples)
+    deactivate S
+    opt level > 0 және ашық ескерту жоқ
+      D -> AS : raise_(Alert(level, message))
+      AS -> E : хабарлама (панель / email)
+    end
+  end
+  D --> API : status
+  deactivate D
+  API --> A : 200 OK
+end
+deactivate API
+@enduml

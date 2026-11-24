@@ -1,0 +1,163 @@
+@startuml
+!include _style.iuml
+hide circle
+skinparam linetype ortho
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #1F3864
+  HeaderBackgroundColor #DAE8FC
+}
+title ER диаграммасы (3NF, SQLite)
+
+entity roles {
+  * id : INTEGER <<PK>>
+  --
+  * code : TEXT <<UQ>>
+  * name : TEXT
+  * can_execute : INTEGER
+}
+entity users {
+  * id : INTEGER <<PK>>
+  --
+  * full_name : TEXT
+  * email : TEXT <<UQ>>
+  * password_hash : TEXT
+  * role_id : INTEGER <<FK>>
+  * is_active : INTEGER
+  * created_at : TEXT
+}
+entity device_groups {
+  * id : INTEGER <<PK>>
+  --
+  * name : TEXT <<UQ>>
+  * location : TEXT
+}
+entity devices {
+  * id : INTEGER <<PK>>
+  --
+  * agent_uid : TEXT <<UQ>>
+  * hostname : TEXT
+  * os : TEXT
+  ip_address : TEXT
+  group_id : INTEGER <<FK>>
+  * registered_at : TEXT
+  last_seen : TEXT
+}
+entity agent_tokens {
+  * id : INTEGER <<PK>>
+  --
+  * device_id : INTEGER <<FK>>
+  * token_hash : TEXT <<UQ>>
+  * created_at : TEXT
+  revoked_at : TEXT
+}
+entity metric_types {
+  * id : INTEGER <<PK>>
+  --
+  * code : TEXT <<UQ>>
+  * name : TEXT
+  * unit : TEXT
+}
+entity metrics {
+  * id : INTEGER <<PK>>
+  --
+  * device_id : INTEGER <<FK>>
+  * metric_type_id : INTEGER <<FK>>
+  * value : REAL
+  * measured_at : TEXT
+}
+entity thresholds {
+  * id : INTEGER <<PK>>
+  --
+  * metric_type_id : INTEGER <<FK>>
+  group_id : INTEGER <<FK>>
+  * warn_value : REAL
+  * crit_value : REAL
+  * consecutive_count : INTEGER
+}
+entity alerts {
+  * id : INTEGER <<PK>>
+  --
+  * device_id : INTEGER <<FK>>
+  metric_type_id : INTEGER <<FK>>
+  * level : TEXT
+  * message : TEXT
+  * created_at : TEXT
+  acknowledged_by : INTEGER <<FK>>
+  acknowledged_at : TEXT
+  * status : TEXT
+}
+entity incidents {
+  * id : INTEGER <<PK>>
+  --
+  alert_id : INTEGER <<FK, UQ>>
+  * title : TEXT
+  assigned_to : INTEGER <<FK>>
+  * status : TEXT
+  * created_at : TEXT
+  closed_at : TEXT
+}
+entity command_types {
+  * id : INTEGER <<PK>>
+  --
+  * code : TEXT <<UQ>>
+  * name : TEXT
+  * timeout_sec : INTEGER
+  * ttl_sec : INTEGER
+  * max_attempts : INTEGER
+  * is_destructive : INTEGER
+}
+entity commands {
+  * id : INTEGER <<PK>>
+  --
+  * device_id : INTEGER <<FK>>
+  * command_type_id : INTEGER <<FK>>
+  * requested_by : INTEGER <<FK>>
+  * status : TEXT
+  * attempts : INTEGER
+  * created_at : TEXT
+  * expires_at : TEXT
+  started_at : TEXT
+  finished_at : TEXT
+  result : TEXT
+}
+entity audit_log {
+  * id : INTEGER <<PK>>
+  --
+  user_id : INTEGER <<FK>>
+  * action : TEXT
+  * entity : TEXT
+  entity_id : INTEGER
+  details : TEXT
+  * created_at : TEXT
+}
+entity reports {
+  * id : INTEGER <<PK>>
+  --
+  * created_by : INTEGER <<FK>>
+  group_id : INTEGER <<FK>>
+  * period_from : TEXT
+  * period_to : TEXT
+  * format : TEXT
+  * created_at : TEXT
+}
+
+roles ||--o{ users
+device_groups |o--o{ devices
+devices ||--o{ agent_tokens
+devices ||--o{ metrics
+metric_types ||--o{ metrics
+metric_types ||--o{ thresholds
+device_groups |o--o{ thresholds
+devices ||--o{ alerts
+metric_types |o--o{ alerts
+users |o--o{ alerts : acknowledged_by
+alerts |o--o| incidents
+users |o--o{ incidents : assigned_to
+devices ||--o{ commands
+command_types ||--o{ commands
+users ||--o{ commands : requested_by
+users |o--o{ audit_log
+users ||--o{ reports
+device_groups |o--o{ reports
+@enduml

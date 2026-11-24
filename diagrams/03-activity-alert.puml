@@ -1,0 +1,39 @@
+@startuml
+!include _style.iuml
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ActivityBorderColor #333333
+skinparam SwimlaneTitleFontStyle bold
+title Activity 1: Ақауды анықтау және жою
+
+|Мониторинг агенті|
+start
+:Көрсеткіштерді жинау\n(CPU, RAM, диск, температура);
+:Метрикаларды серверге жіберу\n(POST /api/agent/metrics, X-Agent-Token);
+|Сервер (ITMon)|
+if (Токен дұрыс па?) then (жоқ)
+  :401 қайтару, оқиғаны журналға жазу;
+  stop
+else (иә)
+endif
+:Метриканы сақтау, last_seen жаңарту;
+:Соңғы N өлшемді алу\n(N = consecutive_count);
+if (N өлшемнің бәрі шектен асты ма?) then (жоқ)
+  :Күй "ok" (бір реттік секіріс елемейді);
+  stop
+else (иә)
+endif
+:Ескерту жасау (warn / crit);
+:Инженерге хабарлама жіберу;
+|Техникалық қолдау инженері|
+:Ескертуді ашу, графикті қарау;
+:Ескертуді растау (acknowledge);
+if (Қашықтан жоюға бола ма?) then (иә)
+  :Қашықтан команда жіберу\n(Activity 2);
+else (жоқ)
+  :Инцидент ашу, орнына бару;
+endif
+:Мәселе шешілгенін тексеру;
+|Сервер (ITMon)|
+:Ескерту күйін "resolved" ету,\nаудит журналына жазу;
+stop
+@enduml

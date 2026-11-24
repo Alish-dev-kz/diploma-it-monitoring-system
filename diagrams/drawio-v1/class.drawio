@@ -1,0 +1,147 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Class" id="d1">
+    <mxGraphModel dx="1022" dy="564" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="User" parent="1" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#1f3864;fontColor=#ffffff;strokeColor=#1f3864;swimlaneFillColor=#ffffff;" value="User (Пайдаланушы)" vertex="1">
+          <mxGeometry height="150" width="200" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="User_a" parent="User" style="text;html=1;align=left;verticalAlign=top;spacingLeft=6;fontFamily=Courier New;fontSize=12;" value="- id: int&lt;br&gt;- fullName: String&lt;br&gt;- role: String" vertex="1">
+          <mxGeometry height="60" width="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="User_l" parent="User" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="6" width="200" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="User_m" parent="User" style="text;html=1;align=left;verticalAlign=top;spacingLeft=6;fontFamily=Courier New;fontSize=12;" value="+ login()&lt;br&gt;+ logout()" vertex="1">
+          <mxGeometry height="48" width="200" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Diag" parent="1" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#1f3864;fontColor=#ffffff;strokeColor=#1f3864;swimlaneFillColor=#ffffff;" value="Diagnostic (Диагностика)" vertex="1">
+          <mxGeometry height="150" width="200" x="360" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Diag_a" parent="Diag" style="text;html=1;align=left;verticalAlign=top;spacingLeft=6;fontFamily=Courier New;fontSize=12;" value="- id: int&lt;br&gt;- result: String&lt;br&gt;- date: Date" vertex="1">
+          <mxGeometry height="60" width="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Diag_l" parent="Diag" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="6" width="200" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="Diag_m" parent="Diag" style="text;html=1;align=left;verticalAlign=top;spacingLeft=6;fontFamily=Courier New;fontSize=12;" value="+ run()&lt;br&gt;+ getRecommendation()" vertex="1">
+          <mxGeometry height="48" width="200" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Alert" parent="1" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#1f3864;fontColor=#ffffff;strokeColor=#1f3864;swimlaneFillColor=#ffffff;" value="Alert (Ескерту)" vertex="1">
+          <mxGeometry height="150" width="200" x="680" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Alert_a" parent="Alert" style="text;html=1;align=left;verticalAlign=top;spacingLeft=6;fontFamily=Courier New;fontSize=12;" value="- id: int&lt;br&gt;- level: String&lt;br&gt;- message: String" vertex="1">
+          <mxGeometry height="60" width="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Alert_l" parent="Alert" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="6" width="200" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="Alert_m" parent="Alert" style="text;html=1;align=left;verticalAlign=top;spacingLeft=6;fontFamily=Courier New;fontSize=12;" value="+ acknowledge()" vertex="1">
+          <mxGeometry height="48" width="200" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Dev" parent="1" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#1f3864;fontColor=#ffffff;strokeColor=#1f3864;swimlaneFillColor=#ffffff;" value="Device (Құрылғы)" vertex="1">
+          <mxGeometry height="150" width="200" x="360" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="Dev_a" parent="Dev" style="text;html=1;align=left;verticalAlign=top;spacingLeft=6;fontFamily=Courier New;fontSize=12;" value="- id: int&lt;br&gt;- hostname: String&lt;br&gt;- status: String" vertex="1">
+          <mxGeometry height="60" width="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Dev_l" parent="Dev" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="6" width="200" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="Dev_m" parent="Dev" style="text;html=1;align=left;verticalAlign=top;spacingLeft=6;fontFamily=Courier New;fontSize=12;" value="+ register()&lt;br&gt;+ reboot()" vertex="1">
+          <mxGeometry height="48" width="200" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Met" parent="1" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#1f3864;fontColor=#ffffff;strokeColor=#1f3864;swimlaneFillColor=#ffffff;" value="Metric (Көрсеткіш)" vertex="1">
+          <mxGeometry height="150" width="200" x="680" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="Met_a" parent="Met" style="text;html=1;align=left;verticalAlign=top;spacingLeft=6;fontFamily=Courier New;fontSize=12;" value="- type: String&lt;br&gt;- value: float&lt;br&gt;- timestamp: Date" vertex="1">
+          <mxGeometry height="60" width="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Met_l" parent="Met" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="6" width="200" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="Met_m" parent="Met" style="text;html=1;align=left;verticalAlign=top;spacingLeft=6;fontFamily=Courier New;fontSize=12;" value="+ getValue()" vertex="1">
+          <mxGeometry height="48" width="200" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Rep" parent="1" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#1f3864;fontColor=#ffffff;strokeColor=#1f3864;swimlaneFillColor=#ffffff;" value="Report (Есеп)" vertex="1">
+          <mxGeometry height="150" width="200" x="40" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="Rep_a" parent="Rep" style="text;html=1;align=left;verticalAlign=top;spacingLeft=6;fontFamily=Courier New;fontSize=12;" value="- id: int&lt;br&gt;- parametr: String&lt;br&gt;- createdAt: Date" vertex="1">
+          <mxGeometry height="60" width="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Rep_l" parent="Rep" style="line;strokeWidth=1;html=1;" value="" vertex="1">
+          <mxGeometry height="6" width="200" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="Rep_m" parent="Rep" style="text;html=1;align=left;verticalAlign=top;spacingLeft=6;fontFamily=Courier New;fontSize=12;" value="+ generate()" vertex="1">
+          <mxGeometry height="48" width="200" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="r1" edge="1" parent="1" source="User" style="endArrow=none;html=1;" target="Diag" value="тағайындайды">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_l1" connectable="0" parent="r1" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=bottom;fontStyle=1;fontColor=#1f6fb5;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-0.85" as="geometry">
+            <mxPoint y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r1_l2" connectable="0" parent="r1" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=bottom;fontStyle=1;fontColor=#1f6fb5;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.85" as="geometry">
+            <mxPoint y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r2" edge="1" parent="1" source="Diag" style="endArrow=none;html=1;" target="Dev" value="жасалады">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_l3" connectable="0" parent="r2" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=bottom;fontStyle=1;fontColor=#1f6fb5;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="-0.85" as="geometry">
+            <mxPoint y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r2_l4" connectable="0" parent="r2" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=bottom;fontStyle=1;fontColor=#1f6fb5;" value="1" vertex="1">
+          <mxGeometry relative="1" x="0.85" as="geometry">
+            <mxPoint y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r3" edge="1" parent="1" source="Dev" style="endArrow=none;html=1;startArrow=diamondThin;startFill=1;startSize=14;" target="Met" value="жинайды">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_l5" connectable="0" parent="r3" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=bottom;fontStyle=1;fontColor=#1f6fb5;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-0.85" as="geometry">
+            <mxPoint y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r3_l6" connectable="0" parent="r3" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=bottom;fontStyle=1;fontColor=#1f6fb5;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.85" as="geometry">
+            <mxPoint y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r4" edge="1" parent="1" source="Dev" style="endArrow=none;html=1;" target="Alert" value="тудырады">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_l7" connectable="0" parent="r4" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=bottom;fontStyle=1;fontColor=#1f6fb5;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-0.85" as="geometry">
+            <mxPoint y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r4_l8" connectable="0" parent="r4" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=bottom;fontStyle=1;fontColor=#1f6fb5;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.85" as="geometry">
+            <mxPoint y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5" edge="1" parent="1" source="User" style="endArrow=none;html=1;" target="Rep" value="жасайды">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_l9" connectable="0" parent="r5" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=bottom;fontStyle=1;fontColor=#1f6fb5;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-0.85" as="geometry">
+            <mxPoint y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r5_l10" connectable="0" parent="r5" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=bottom;fontStyle=1;fontColor=#1f6fb5;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.85" as="geometry">
+            <mxPoint y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

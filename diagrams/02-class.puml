@@ -1,0 +1,153 @@
+@startuml
+!include _style.iuml
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #1F3864
+  HeaderBackgroundColor #DAE8FC
+}
+skinparam nodesep 40
+skinparam ranksep 50
+hide empty members
+title Class диаграммасы (SOLID бойынша түзетілген нұсқа)
+
+class User {
+  - id: int
+  - fullName: str
+  - email: str
+  - passwordHash: str
+  - isActive: bool
+  + checkPassword(raw: str): bool
+  + can(permission: str): bool
+}
+class Role {
+  - code: str
+  - name: str
+  - canExecute: bool
+}
+class DeviceGroup {
+  - name: str
+  - location: str
+}
+class Device {
+  - agentUid: str
+  - hostname: str
+  - os: str
+  - lastSeen: datetime
+  + isOnline(now: datetime): bool
+}
+class Metric {
+  - type: MetricType
+  - value: float
+  - measuredAt: datetime
+}
+class MetricType {
+  - code: str
+  - unit: str
+}
+class Threshold {
+  - warnValue: float
+  - critValue: float
+  - consecutiveCount: int
+  + levelOf(value: float): int
+}
+class Alert {
+  - level: str
+  - message: str
+  - status: str
+  + acknowledge(by: User): void
+}
+class Incident {
+  - title: str
+  - status: str
+  + assign(engineer: User): void
+  + close(): void
+}
+
+interface DetectionStrategy <<Strategy>> {
+  + evaluate(samples: list[float], t: Threshold): int
+}
+class SingleSampleStrategy
+class ConsecutiveStrategy
+class ZScoreStrategy {
+  - k: float
+}
+
+class DiagnosticService {
+  - strategy: DetectionStrategy
+  + check(device: Device, type: MetricType): Alert | None
+}
+class AlertService {
+  + raise_(alert: Alert): void
+  + notify(alert: Alert): void
+}
+interface MetricRepository {
+  + save(device: Device, m: Metric): void
+  + latest(device: Device, type: MetricType, n: int): list[Metric]
+}
+class SqliteMetricRepository
+
+class CommandType {
+  - code: str
+  - ttlSec: int
+  - timeoutSec: int
+  - maxAttempts: int
+}
+class Command <<Context>> {
+  - status: CommandState
+  - attempts: int
+  - expiresAt: datetime
+  + deliver(now): void
+  + complete(result: str): void
+  + tick(now): void
+}
+abstract class CommandState <<State>> {
+  + deliver(cmd, now)
+  + complete(cmd, result)
+  + tick(cmd, now)
+}
+class PendingState
+class RunningState
+class DoneState
+class ExpiredState
+class FailedState
+
+class CommandQueue {
+  + enqueue(device, type, user): Command
+  + pollFor(device): list[Command]
+}
+class AuditLog {
+  + record(user: User, action: str, details: str): void
+}
+
+User "*" --> "1" Role
+DeviceGroup "1" o-- "*" Device
+Device "1" *-- "*" Metric
+Metric "*" --> "1" MetricType
+Threshold "*" --> "1" MetricType
+Threshold "*" --> "0..1" DeviceGroup
+Device "1" -- "*" Alert : тудырады >
+Alert "1" -- "0..1" Incident
+Incident "*" --> "0..1" User : тағайындалған
+
+DetectionStrategy <|.. SingleSampleStrategy
+DetectionStrategy <|.. ConsecutiveStrategy
+DetectionStrategy <|.. ZScoreStrategy
+DiagnosticService o--> "1" DetectionStrategy
+DiagnosticService --> MetricRepository
+DiagnosticService ..> AlertService : <<use>>
+DiagnosticService ..> Threshold : <<use>>
+MetricRepository <|.. SqliteMetricRepository
+
+Command "*" --> "1" Device
+Command "*" --> "1" CommandType
+Command "*" --> "1" User : requestedBy
+Command *--> "1" CommandState
+CommandState <|-- PendingState
+CommandState <|-- RunningState
+CommandState <|-- DoneState
+CommandState <|-- ExpiredState
+CommandState <|-- FailedState
+CommandQueue "1" o-- "*" Command
+CommandQueue ..> AuditLog : <<use>>
+@enduml

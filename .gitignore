@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+*.db
+!db/*.sql
+.agent_id
+.venv/
+.env
+~$*.docx
+.agent_token
+agent.zip

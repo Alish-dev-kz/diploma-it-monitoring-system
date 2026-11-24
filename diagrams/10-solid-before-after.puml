@@ -1,0 +1,56 @@
+@startuml
+!include _style.iuml
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #1F3864
+}
+hide empty members
+title SOLID: түзетуге дейін және кейін
+
+package "ДЕЙІН (v1)" #FDECEA {
+  class "Diagnostic" as D1 {
+    - id: int
+    - result: String
+    - date: Date
+    + run()
+    + getRecommendation()
+  }
+  note bottom of D1
+    SRP бұзылады: бір класс метрика жинайды,
+    шекпен салыстырады, ескерту жасайды,
+    нәтижені сақтайды, ұсыныс береді
+  end note
+  class "app.py: diagnose(m)" as F1 {
+    THRESHOLDS = dict
+    if v >= crit ... elif v >= warn ...
+  }
+  note bottom of F1
+    OCP бұзылады: жаңа әдіс (N рет қатарынан,
+    z-score) қосу үшін функцияның ішін өзгерту керек
+  end note
+}
+
+package "КЕЙІН (v2)" #E8F5E9 {
+  class DiagnosticService {
+    + check(device, type)
+  }
+  class AlertService {
+    + raise_(alert)
+  }
+  interface MetricRepository {
+    + latest(device, type, n)
+  }
+  interface DetectionStrategy {
+    + evaluate(samples, threshold): int
+  }
+  class ConsecutiveStrategy
+  class ZScoreStrategy
+  DiagnosticService --> MetricRepository : DIP
+  DiagnosticService --> DetectionStrategy : OCP
+  DiagnosticService ..> AlertService : SRP
+  DetectionStrategy <|.. ConsecutiveStrategy
+  DetectionStrategy <|.. ZScoreStrategy
+}
+D1 -[hidden]right-> DiagnosticService
+@enduml

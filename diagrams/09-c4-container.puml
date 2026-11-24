@@ -1,0 +1,25 @@
+@startuml
+!include <C4/C4_Container>
+skinparam defaultFontName "DejaVu Sans"
+skinparam dpi 120
+LAYOUT_TOP_DOWN()
+title C4, 2-деңгей: контейнерлер
+
+Person(eng, "Инженер / әкімші / басшы", "Браузер арқылы жұмыс істейді")
+
+System_Boundary(itmon, "ITMon") {
+  Container(web, "Веб-панель", "HTML, CSS, JavaScript (SPA)", "10 экран: басқару тақтасы, құрылғылар, ескертулер, командалар, шекті мәндер, есептер, журнал, пайдаланушылар")
+  Container(api, "API-сервер", "Python 3.12, FastAPI, SQLAlchemy, JWT", "Метрикаларды қабылдау, диагностика (N рет қатарынан), команда кезегі (TTL), RBAC, аудит, есептер")
+  Container(worker, "Фондық тапсырмалар", "Python, APScheduler (жоспар)", "Есептер, ескі метрикаларды тазалау, хабарлама жіберу")
+  ContainerDb(db, "Деректер қоры", "SQLite (прототип) / PostgreSQL + TimescaleDB (өнім)", "Құрылғылар, метрикалар, ескертулер, командалар, аудит")
+}
+Container_Ext(agent, "Мониторинг агенті", "Python, psutil, requests", "Әр компьютерде: 5 с сайын метрика, 2 с сайын команда сұрайды")
+System_Ext(mail, "SMTP / Telegram", "Хабарламалар")
+
+Rel(eng, web, "Пайдаланады", "HTTPS")
+Rel(web, api, "REST API шақырулары", "JSON/HTTPS")
+Rel(agent, api, "POST /api/agent/metrics, GET /api/agent/pending, POST /result", "JSON/HTTPS, X-Agent-Token")
+Rel(api, db, "Оқу/жазу", "SQL")
+Rel(worker, db, "Оқу/жазу", "SQL")
+Rel(worker, mail, "Хабарлама", "SMTP/HTTPS")
+@enduml
